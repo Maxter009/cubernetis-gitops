@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: cubernetis/device-app:11
+          image: cubernetis/device-app:10
           imagePullPolicy: Never
           ports: [{containerPort: 8080, name: http}]
           readinessProbe: {httpGet: {path: /healthz, port: http}, periodSeconds: 2}
