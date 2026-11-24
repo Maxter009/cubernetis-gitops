@@ -7,6 +7,6 @@ metadata:
 spec:
   selector:
     app: device-app
-    slot: blue
+    slot: green
   ports:
     - {name: http, port: 80, targetPort: http}
