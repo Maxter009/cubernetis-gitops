@@ -5,7 +5,7 @@ metadata:
   name: device-app-blue
   labels: {app: device-app, slot: blue}
 spec:
-  replicas: 3
+  replicas: 0
   selector:
     matchLabels: {app: device-app, slot: blue}
   template:
