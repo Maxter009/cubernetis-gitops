@@ -6,7 +6,7 @@ metadata:
   name: device-app-green
   labels: {app: device-app, slot: green}
 spec:
-  replicas: 0
+  replicas: 3
   selector:
     matchLabels: {app: device-app, slot: green}
   template:
@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: cubernetis/device-app:10
+          image: cubernetis/device-app:11
           imagePullPolicy: Never
           ports: [{containerPort: 8080, name: http}]
           readinessProbe: {httpGet: {path: /healthz, port: http}, periodSeconds: 2}
