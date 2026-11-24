@@ -1,0 +1,11 @@
+# Ein Service fuer stable + canary Pods. Die Verteilung ergibt sich aus
+# dem Verhaeltnis der Pods, das Argo Rollouts pro Schritt einstellt.
+apiVersion: v1
+kind: Service
+metadata:
+  name: device-app
+spec:
+  selector:
+    app: device-app
+  ports:
+    - {name: http, port: 80, targetPort: http}

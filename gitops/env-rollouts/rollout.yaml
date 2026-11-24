@@ -1,0 +1,36 @@
+# Argo Rollout mit Canary-Strategie (replica-basiert, ohne Ingress/Service-Mesh):
+# 10 Pods gesamt -> jeder Schritt tauscht Pods aus, 1 Pod = 10 % der Geraete-Verbindungen.
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: device-app
+spec:
+  replicas: 10
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels: {app: device-app}
+  template:
+    metadata:
+      labels: {app: device-app}
+    spec:
+      containers:
+        - name: app
+          image: cubernetis/device-app:10
+          imagePullPolicy: Never
+          ports: [{containerPort: 8080, name: http}]
+          readinessProbe: {httpGet: {path: /healthz, port: http}, periodSeconds: 2}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 64Mi}
+  strategy:
+    canary:
+      maxSurge: 1
+      maxUnavailable: 0
+      steps:
+        - setWeight: 10
+        - pause: {}            # manuelle Freigabe (ArgoCD-UI "Resume" oder Skript)
+        - setWeight: 30
+        - pause: {}
+        - setWeight: 60
+        - pause: {}
+        # danach automatisch 100 % -> v11 wird neue stabile Version

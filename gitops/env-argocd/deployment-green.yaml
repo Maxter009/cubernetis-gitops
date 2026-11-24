@@ -1,0 +1,24 @@
+# Green-Slot. Startzustand: leer (0 Replicas). Fuer den Release wird hier v11
+# eingetragen und hochskaliert - erst danach schaltet service.yaml um.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-app-green
+  labels: {app: device-app, slot: green}
+spec:
+  replicas: 0
+  selector:
+    matchLabels: {app: device-app, slot: green}
+  template:
+    metadata:
+      labels: {app: device-app, slot: green}
+    spec:
+      containers:
+        - name: app
+          image: cubernetis/device-app:10
+          imagePullPolicy: Never
+          ports: [{containerPort: 8080, name: http}]
+          readinessProbe: {httpGet: {path: /healthz, port: http}, periodSeconds: 2}
+          resources:
+            requests: {cpu: 10m, memory: 32Mi}
+            limits: {memory: 64Mi}

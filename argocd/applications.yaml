@@ -1,0 +1,38 @@
+# Zwei ArgoCD-Applications = zwei Umgebungen, beide aus demselben Git-Repo.
+# Automatischer Sync: jeder Commit auf main wird ausgerollt, manuelle Aenderungen im
+# Cluster werden zurueckgesetzt (selfHeal) - Git ist die einzige Wahrheit.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: env-argocd
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Maxter009/cubernetis-gitops.git
+    targetRevision: main
+    path: gitops/env-argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: env-argocd
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true]
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: env-rollouts
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Maxter009/cubernetis-gitops.git
+    targetRevision: main
+    path: gitops/env-rollouts
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: env-rollouts
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true]

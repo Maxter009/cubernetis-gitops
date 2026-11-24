@@ -1,0 +1,12 @@
+# Der "Schalter": der Selector bestimmt, welcher Slot ALLEN Traffic bekommt.
+# Umschalten blue -> green = harter Switch (ein Git-Commit, ArgoCD synct).
+apiVersion: v1
+kind: Service
+metadata:
+  name: device-app
+spec:
+  selector:
+    app: device-app
+    slot: blue
+  ports:
+    - {name: http, port: 80, targetPort: http}
